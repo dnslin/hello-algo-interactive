@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "composite": true,
+    "jsx": "react-jsx"
+  },
+  "references": [
+    { "path": "../../packages/algorithm-engine" },
+    { "path": "../../packages/renderers-sequence" },
+    { "path": "../../packages/renderers-graph-tree" },
+    { "path": "../../packages/renderers-grid-board" },
+    { "path": "../../packages/renderers-linked" },
+    { "path": "../../packages/ui" },
+    { "path": "../../packages/content-adapter" }
+  ],
+  "include": ["src/**/*"]
+}

@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/algorithm-engine" },
+    { "path": "./packages/renderers-sequence" },
+    { "path": "./packages/renderers-graph-tree" },
+    { "path": "./packages/renderers-grid-board" },
+    { "path": "./packages/renderers-linked" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/content-adapter" },
+    { "path": "./apps/web" }
+  ]
+}
