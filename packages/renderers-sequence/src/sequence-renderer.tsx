@@ -32,7 +32,7 @@ export function SequenceRenderer<T = number>({
 }: SequenceRendererProps<T>): ReactElement {
   const { elements, pointers, sortedIndices } = state;
 
-  // Calculate maximum numeric value for height fill
+  // Calculate dynamic maximum value for proportional level fill
   const numericValues = elements
     .map((el) => (typeof el.value === 'number' ? el.value : 0))
     .filter((v) => !isNaN(v));
@@ -78,9 +78,9 @@ export function SequenceRenderer<T = number>({
       aria-label="数组序列可视化画布"
       className={`w-full flex flex-col items-center justify-center p-3 select-none ${className}`}
     >
-      {/* 1. Fixed-Height Top Status HUD (Zero vertical jump) */}
+      {/* 1. Fixed-Height Top Status Strip */}
       {showStatusHeader && (
-        <div className="h-8 flex items-center justify-center mb-1 w-full max-w-2xl px-2">
+        <div className="h-8 flex items-center justify-center mb-2 w-full max-w-2xl px-2">
           {comparingPair ? (
             <div
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-semibold border transition-all duration-200 ${
@@ -99,56 +99,79 @@ export function SequenceRenderer<T = number>({
               </span>
             </div>
           ) : (
-            <div className="text-xs font-mono text-muted-foreground/70 flex items-center gap-1.5">
-              <span>数组序列 (长度 {elements.length})</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono text-muted-foreground bg-muted/40 border border-border/40">
+              <span className="font-medium text-foreground/80">数组序列 (长度 {elements.length})</span>
               {sortedIndices.length > 0 && (
-                <span>• 已就位 {sortedIndices.length}/{elements.length} 项</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                  • 已就位 {sortedIndices.length}/{elements.length} 项
+                </span>
               )}
             </div>
           )}
         </div>
       )}
 
-      {/* 2. Fixed-Height Pointer Track (Zero layout shifting) */}
+      {/* 2. Fixed-Height Pointer Track with Collision-Proof Badges */}
       {showPointers && (
-        <div className="w-full flex justify-center items-end h-8 gap-3 sm:gap-4 mb-2 px-2 overflow-x-auto">
+        <div className="w-full flex justify-center items-end h-7 gap-3 sm:gap-4 mb-2.5 px-2 overflow-x-auto">
           {elements.map((el, idx) => {
             const ptrs = pointersByIndex.get(idx) ?? [];
             return (
               <div
                 key={`ptr-slot-${el.id}`}
-                className="w-16 sm:w-20 h-8 flex flex-col items-center justify-end shrink-0"
+                className="w-16 sm:w-20 h-7 flex items-end justify-center shrink-0"
               >
-                {ptrs.map((p) => {
-                  const isIPointer = p.name === 'i';
-                  const badgeColor = isIPointer
-                    ? 'bg-blue-600 dark:bg-blue-500 text-white'
-                    : 'bg-purple-600 dark:bg-purple-500 text-white';
+                {ptrs.length === 1 && (
+                  <span
+                    style={{
+                      transition: `all ${moveDuration}ms ${MOTION_TOKENS.move.easing}`,
+                    }}
+                    className={`inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-mono font-bold rounded-full shadow-xs text-white ${
+                      ptrs[0].name === 'i'
+                        ? 'bg-blue-600 dark:bg-blue-500'
+                        : 'bg-purple-600 dark:bg-purple-500'
+                    }`}
+                  >
+                    <span className="text-[9px]">↓</span>
+                    <span>{ptrs[0].label ?? ptrs[0].name}</span>
+                  </span>
+                )}
 
-                  return (
-                    <span
-                      key={`${p.name}-${p.index}`}
-                      style={{
-                        transition: `all ${moveDuration}ms ${MOTION_TOKENS.move.easing}`,
-                      }}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-mono font-bold rounded-full shadow-xs ${badgeColor}`}
-                    >
-                      <span>↓</span>
-                      <span>{p.label ?? p.name}</span>
-                    </span>
-                  );
-                })}
+                {/* Merged Multi-Pointer Pill when i and j meet at the same slot */}
+                {ptrs.length > 1 && (
+                  <div
+                    style={{
+                      transition: `all ${moveDuration}ms ${MOTION_TOKENS.move.easing}`,
+                    }}
+                    className="inline-flex items-center rounded-full shadow-xs text-[10px] font-mono font-bold overflow-hidden border border-border/40 bg-card text-white"
+                  >
+                    {ptrs.map((p, pIdx) => {
+                      const isI = p.name === 'i';
+                      return (
+                        <span
+                          key={p.name}
+                          className={`px-1.5 py-0.5 flex items-center gap-0.5 ${
+                            isI ? 'bg-blue-600 dark:bg-blue-500' : 'bg-purple-600 dark:bg-purple-500'
+                          } ${pIdx > 0 ? 'border-l border-white/20' : ''}`}
+                        >
+                          {pIdx === 0 && <span className="text-[9px]">↓</span>}
+                          <span>{p.label ?? p.name}</span>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
       )}
 
-      {/* 3. Main Deck Container (Strictly Uniform Card Geometry, No Scale Jumps) */}
+      {/* 3. Main Deck Container (Strictly Uniform Geometry) */}
       <div
         role="list"
         aria-label="数组序列元素列表"
-        className="flex items-center justify-center gap-3 sm:gap-4 p-4 sm:p-5 bg-muted/20 dark:bg-muted/10 rounded-2xl border border-border/50 max-w-full overflow-x-auto min-h-[190px]"
+        className="flex items-center justify-center gap-3 sm:gap-4 p-4 sm:p-5 bg-muted/20 dark:bg-muted/10 rounded-2xl border border-border/50 max-w-full overflow-x-auto min-h-[195px]"
       >
         {elements.map((element, index) => {
           const isSorted = sortedIndices.includes(index) || element.state === 'sorted';
@@ -161,7 +184,7 @@ export function SequenceRenderer<T = number>({
             ? Math.max(18, Math.min(90, Math.round((numericVal / computedMax) * 72 + 18)))
             : 0;
 
-          // Pure color shifts & subtle translation (NO scale transformation)
+          // State-specific styling
           let cardBorderClass = 'border-border/80 bg-card shadow-xs';
           let fillClass = 'bg-primary/10 dark:bg-primary/15';
           let translateY = 'translate-y-0';
@@ -195,7 +218,7 @@ export function SequenceRenderer<T = number>({
               }}
               className={`relative w-16 sm:w-20 h-40 rounded-xl border flex flex-col justify-between items-center p-2 cursor-pointer select-none shrink-0 overflow-hidden ${cardBorderClass} ${translateY}`}
             >
-              {/* Proportional Level Fill Bar (Rising from Bottom, Quiet & Non-distracting) */}
+              {/* Proportional Level Fill Bar (Rising from Bottom) */}
               {showHeightBars && (
                 <div
                   style={{
@@ -206,12 +229,12 @@ export function SequenceRenderer<T = number>({
                 />
               )}
 
-              {/* Top Row: Entity ID Badge (Left) & State Tag (Right) */}
+              {/* Top Row: Entity ID Badge (Left) & State Badge (Right) */}
               <div className="w-full h-5 flex items-center justify-between z-10 text-[10px] font-mono leading-none">
                 {showEntityIds ? (
                   <span
                     title={`Entity ID: ${element.id} (稳定空间标识)`}
-                    className="px-1.5 py-0.5 rounded bg-background/80 text-muted-foreground border border-border/50 font-semibold"
+                    className="px-1.5 py-0.5 rounded bg-muted/80 text-muted-foreground font-semibold"
                   >
                     #{element.id.replace('e_', '')}
                   </span>
@@ -240,7 +263,7 @@ export function SequenceRenderer<T = number>({
                 )}
               </div>
 
-              {/* Center: Hero Numerical Value (Crisp, Stable, Vertical Middle) */}
+              {/* Center: Hero Numerical Value */}
               <div className="flex-1 flex flex-col items-center justify-center z-10 my-auto">
                 <span className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-foreground">
                   {String(element.value)}

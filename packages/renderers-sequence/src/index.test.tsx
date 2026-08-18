@@ -74,6 +74,24 @@ describe('Renderers Sequence - SequenceRenderer Component', () => {
     expect(screen.getAllByText('比较').length).toBeGreaterThanOrEqual(2);
   });
 
+  it('renders merged multi-pointer pill cleanly when multiple pointers share the same index', () => {
+    const state: SequenceSceneState<number> = {
+      elements: [
+        { id: 'e_0', value: 1, state: 'idle', index: 0 },
+        { id: 'e_1', value: 3, state: 'idle', index: 1 },
+      ],
+      pointers: [
+        { name: 'i', index: 0, label: 'i=0' },
+        { name: 'j', index: 0, label: 'j=0' },
+      ],
+      sortedIndices: [],
+    };
+
+    render(<SequenceRenderer state={state} />);
+    expect(screen.getByText('i=0')).toBeInTheDocument();
+    expect(screen.getByText('j=0')).toBeInTheDocument();
+  });
+
   it('fires onElementClick when element is clicked', () => {
     const state = createInitialSequenceState([10, 20]);
     const handleClick = vi.fn();
