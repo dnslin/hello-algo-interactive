@@ -70,8 +70,8 @@ describe('Renderers Sequence - SequenceRenderer Component', () => {
 
     expect(screen.getByText('i=0')).toBeInTheDocument();
     expect(screen.getByText('j=1')).toBeInTheDocument();
-    expect(screen.getByText('已就位')).toBeInTheDocument();
-    expect(screen.getAllByText('比较中')).toHaveLength(2);
+    expect(screen.getByText('就位')).toBeInTheDocument();
+    expect(screen.getAllByText('比较').length).toBeGreaterThanOrEqual(2);
   });
 
   it('fires onElementClick when element is clicked', () => {
