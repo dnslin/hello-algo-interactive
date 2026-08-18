@@ -46,7 +46,7 @@ describe('Algorithm Engine - Step Guard', () => {
 
   it('uses default limit of 10,000 steps', () => {
     const guard = new StepGuard();
-    expect(guard['limit']).toBe(DEFAULT_STEP_LIMIT);
+    expect(guard.limit).toBe(DEFAULT_STEP_LIMIT);
   });
 });
 

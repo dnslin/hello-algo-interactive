@@ -17,7 +17,7 @@ export const DEFAULT_STEP_LIMIT = 10_000;
 
 export class StepGuard {
   private count = 0;
-  private readonly limit: number;
+  public readonly limit: number;
 
   constructor(limit = DEFAULT_STEP_LIMIT) {
     this.limit = limit;

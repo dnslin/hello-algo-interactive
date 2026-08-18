@@ -34,6 +34,7 @@ describe('UI Design Tokens - Motion', () => {
     expect(MOTION_TOKENS.compare.durationMs).toBe(240);
     expect(MOTION_TOKENS.move.durationMs).toBe(420);
     expect(MOTION_TOKENS.structural.durationMs).toBe(560);
+    expect(MOTION_TOKENS.fade.durationMs).toBe(150);
   });
 
   it('scales duration with speed factor', () => {

@@ -30,5 +30,12 @@ export function validateCodeAnchorMap(
 export function createContentManifest(
   manifest: AlgorithmContentManifest
 ): AlgorithmContentManifest {
+  for (const [lang, codeManifest] of Object.entries(manifest.codeManifests)) {
+    if (codeManifest && !validateCodeAnchorMap(codeManifest.anchors, codeManifest.code)) {
+      throw new Error(
+        `Invalid semantic code anchor spans in manifest for language: ${lang}`
+      );
+    }
+  }
   return manifest;
 }

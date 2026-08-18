@@ -1,18 +1,16 @@
 export type EntityId = `e_${number}`;
 
+export interface NarrationPayload {
+  key: string;
+  args?: Record<string, unknown>;
+}
+
 export interface AlgorithmEvent<TPayload = unknown> {
   id: string;
   transactionId: string;
   sceneId: string;
   type: string;
   payload: TPayload;
-  marker?: boolean;
-  granularity?: 'macro' | 'micro';
-  codeAnchor?: string;
-  narration?: {
-    key: string;
-    args?: Record<string, unknown>;
-  };
 }
 
 export type SceneArea = 'main' | 'side' | 'bottom' | 'overlay';
@@ -37,10 +35,7 @@ export interface Marker {
   index: number;
   transactionId: string;
   codeAnchor?: string;
-  narration?: {
-    key: string;
-    args?: Record<string, unknown>;
-  };
+  narration?: NarrationPayload;
   variables?: Record<string, unknown>;
 }
 
