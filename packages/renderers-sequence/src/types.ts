@@ -1,35 +1,13 @@
-import type { EntityId } from '@hello-algo/algorithm-engine';
+import type {
+  SequenceElement,
+  SequencePointer,
+  SequenceSceneState,
+  VisualizationState,
+} from '@hello-algo/algorithm-engine';
 
-export type SequenceElementState =
-  | 'idle'
-  | 'comparing'
-  | 'active'
-  | 'selected'
-  | 'visited'
-  | 'sorted'
-  | 'conflict';
+export type SequenceElementState = VisualizationState;
 
-export interface SequenceElement<T = unknown> {
-  id: EntityId;
-  value: T;
-  state: SequenceElementState;
-  index: number;
-  label?: string;
-}
-
-export interface SequencePointer {
-  name: string;
-  index: number;
-  colorToken?: string;
-  label?: string;
-}
-
-export interface SequenceSceneState<T = unknown> {
-  elements: SequenceElement<T>[];
-  pointers: SequencePointer[];
-  sortedIndices: number[];
-  activeRange?: [number, number];
-}
+export type { SequenceElement, SequencePointer, SequenceSceneState };
 
 export interface SequenceMotionRecipe {
   durationMs: number;

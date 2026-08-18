@@ -45,9 +45,18 @@ export interface TimelineTransaction {
   events: AlgorithmEvent[];
 }
 
-export interface StateSnapshot<TSceneState = Record<string, unknown>> {
+export type VisualizationState =
+  | 'idle'
+  | 'comparing'
+  | 'active'
+  | 'selected'
+  | 'visited'
+  | 'sorted'
+  | 'conflict';
+
+export interface StateSnapshot<TScenes = Record<string, unknown>> {
   markerIndex: number;
-  scenes: Record<string, TSceneState>;
+  scenes: TScenes;
   variables: Record<string, unknown>;
   timestamp?: number;
 }
@@ -60,11 +69,38 @@ export interface TraceContext {
   random: () => number;
 }
 
-export interface TraceResult<TResult> {
+export interface TraceResult<TResult = unknown> {
   result: TResult;
   events: AlgorithmEvent[];
   markers: Marker[];
   transactions: TimelineTransaction[];
+}
+
+export type SceneReducer<TState = unknown> = (
+  prevState: TState,
+  event: AlgorithmEvent
+) => TState;
+
+export interface CompiledTimeline<TResult = unknown, TScenes = Record<string, unknown>> {
+  traceResult: TraceResult<TResult>;
+  snapshots: StateSnapshot<TScenes>[];
+  markers: Marker[];
+  transactions: TimelineTransaction[];
+  totalMarkers: number;
+  getSnapshot(markerIndex: number): StateSnapshot<TScenes>;
+  getMarker(markerIndex: number): Marker;
+}
+
+export type PlayerStatus = 'idle' | 'playing' | 'paused' | 'ended';
+
+export interface PlayerState<TScenes = Record<string, unknown>> {
+  status: PlayerStatus;
+  currentIndex: number;
+  totalMarkers: number;
+  speed: number;
+  isLooping: boolean;
+  currentMarker: Marker;
+  currentSnapshot: StateSnapshot<TScenes>;
 }
 
 export interface AlgorithmModule<TInput, TResult> {

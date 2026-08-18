@@ -2,3 +2,8 @@ export * from './types.js';
 export * from './entity.js';
 export * from './guard.js';
 export * from './prng.js';
+export * from './tracer.js';
+export * from './timeline.js';
+export * from './player.js';
+export * from './reducers/sequence-reducer.js';
+export * from './algorithms/bubble-sort.js';

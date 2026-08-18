@@ -5,6 +5,7 @@ import type {
 } from './types.js';
 
 export * from './types.js';
+export * from './manifests/bubble-sort.js';
 
 export function getAnchorLineSpan(
   manifest: LanguageCodeManifest,
