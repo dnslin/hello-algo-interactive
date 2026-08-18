@@ -6,7 +6,8 @@
     "composite": true
   },
   "references": [
-    { "path": "../algorithm-engine" }
+    { "path": "../algorithm-engine" },
+    { "path": "../ui" }
   ],
   "include": ["src/**/*"]
 }

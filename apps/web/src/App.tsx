@@ -12,6 +12,8 @@ import {
   MOTION_TOKENS,
   type VisualizationState,
 } from '@hello-algo/ui';
+import { BubbleSortVisualizer } from './components/BubbleSortVisualizer.js';
+import { Sparkles, Layers } from 'lucide-react';
 
 const BENCHMARK_ALGORITHMS = [
   {
@@ -19,42 +21,42 @@ const BENCHMARK_ALGORITHMS = [
     title: '冒泡排序 (Bubble Sort)',
     category: '排序算法',
     renderers: 'SequenceRenderer',
-    status: 'Tracer Bullet #02',
+    status: 'Tracer Bullet #02 (Active)',
   },
   {
     id: 'binary-search',
     title: '二分查找 (Binary Search)',
     category: '搜索算法',
-    renderers: 'SequenceRenderer',
-    status: 'Sprint 03',
+    renderers: 'SequenceRenderer + Pointers',
+    status: 'Planned',
   },
   {
-    id: 'bfs',
+    id: 'linked-list-reversal',
+    title: '链表反转 (Linked List Reversal)',
+    category: '链表结构',
+    renderers: 'LinkedRenderer',
+    status: 'Planned',
+  },
+  {
+    id: 'binary-tree-traversal',
+    title: '二叉树遍历 (Tree Traversal)',
+    category: '树与递归',
+    renderers: 'GraphTreeRenderer',
+    status: 'Planned',
+  },
+  {
+    id: 'breadth-first-search',
     title: '广度优先遍历 (BFS)',
     category: '图算法',
-    renderers: 'GraphRenderer + QueueRenderer',
-    status: 'Sprint 05',
-  },
-  {
-    id: 'heap-sort',
-    title: '堆排序 (Heap Sort)',
-    category: '树/堆算法',
-    renderers: 'SequenceRenderer + TreeRenderer',
-    status: 'Sprint 06',
-  },
-  {
-    id: '01-knapsack',
-    title: '0-1 背包问题 (0-1 Knapsack)',
-    category: '动态规划',
-    renderers: 'GridRenderer + ItemsList',
-    status: 'Sprint 07',
+    renderers: 'GraphTreeRenderer + LinkedQueue',
+    status: 'Planned',
   },
   {
     id: 'n-queens',
     title: 'N 皇后问题 (N-Queens)',
     category: '回溯算法',
-    renderers: 'BoardRenderer + CallStack',
-    status: 'Sprint 08',
+    renderers: 'GridBoardRenderer',
+    status: 'Planned',
   },
 ];
 
@@ -70,12 +72,14 @@ const PACKAGES = [
 
 export function App() {
   const [isDark, setIsDark] = useState(false);
+  const [activeTab, setActiveTab] = useState<'demo' | 'overview'>('demo');
 
   useEffect(() => {
+    const root = document.documentElement;
     if (isDark) {
-      document.documentElement.classList.add('dark');
+      root.classList.add('dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      root.classList.remove('dark');
     }
   }, [isDark]);
 
@@ -127,140 +131,178 @@ export function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto px-4 py-8 space-y-10 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-4 py-6 space-y-8 w-full">
         {/* Hero Section */}
-        <section className="space-y-4 text-center max-w-3xl mx-auto pt-4">
-          <Badge variant="secondary" className="px-3 py-1 text-sm font-medium">
-            🚀 01 — Monorepo 脚手架与核心包骨架已就绪
-          </Badge>
+        <section className="space-y-4 text-center max-w-3xl mx-auto pt-2">
+          <div className="flex justify-center gap-2">
+            <Badge variant="secondary" className="px-3 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20">
+              ✨ 02 — 冒泡排序端到端垂直贯穿演示 (P0 Tracer-Bullet)
+            </Badge>
+          </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             高品质、可推演、连续空间的算法交互体验
           </h2>
-          <p className="text-muted-foreground text-base leading-relaxed">
-            基于纯语义事件（Semantic Events）、不可变状态快照（State Snapshots）与多场景渲染器（Multi-Renderer Plugins），彻底解耦算法逻辑与动画表现。
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            基于纯语义事件（Semantic Events）、不可变状态快照（State Snapshots）与语义代码锚点（Code Anchors），实现 O(1) 随机 Seek、双向单步推演与多语言代码同步。
           </p>
-        </section>
 
-        {/* OKLCH Semantic State Tokens Section */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold tracking-tight">
-                OKLCH 算法状态语义色盘 (Design Tokens)
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                在深浅双色模式下均符合 WCAG 无障碍对比度标准，双重编码保证视觉可达性
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-            {states.map((state) => {
-              const def = STATE_COLORS[state];
-              return (
-                <Card key={state} className="p-3 text-center space-y-2">
-                  <div className="flex justify-center">
-                    <StatusPill state={state} />
-                  </div>
-                  <div className="text-xs text-muted-foreground font-mono">
-                    {def.name}
-                  </div>
-                </Card>
-              );
-            })}
+          {/* Tab Navigation */}
+          <div className="flex justify-center gap-2 pt-2">
+            <button
+              onClick={() => setActiveTab('demo')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+                activeTab === 'demo'
+                  ? 'bg-primary text-primary-foreground shadow-md'
+                  : 'bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>冒泡排序交互演示 (Tracer-Bullet)</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+                activeTab === 'overview'
+                  ? 'bg-primary text-primary-foreground shadow-md'
+                  : 'bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              <span>设计系统与架构规范</span>
+            </button>
           </div>
         </section>
 
-        {/* Motion Tokens Section */}
-        <section className="space-y-4">
-          <div>
-            <h3 className="text-xl font-bold tracking-tight">
-              Motion 运动规范 (Motion Tokens)
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              统一的物理运动节拍，支持无障碍减少动画（Reduced Motion）与倍速伸缩
-            </p>
-          </div>
+        {/* Tab 1: Interactive Bubble Sort Visualizer */}
+        {activeTab === 'demo' ? (
+          <section className="space-y-6 pt-2">
+            <BubbleSortVisualizer />
+          </section>
+        ) : (
+          /* Tab 2: Design System & Architecture Overview */
+          <div className="space-y-10">
+            {/* OKLCH Semantic State Tokens Section */}
+            <section className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold tracking-tight">
+                    OKLCH 算法状态语义色盘 (Design Tokens)
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    在深浅双色模式下均符合 WCAG 无障碍对比度标准，双重编码保证视觉可达性
+                  </p>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {Object.entries(MOTION_TOKENS).map(([key, token]) => (
-              <Card key={key}>
-                <CardHeader className="p-4 pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-semibold">{key}</CardTitle>
-                    <Badge variant="secondary">{token.durationMs}ms</Badge>
-                  </div>
-                  <CardDescription className="text-xs">{token.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 pt-0 font-mono text-[11px] text-muted-foreground truncate">
-                  {token.easing}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+                {states.map((state) => {
+                  const def = STATE_COLORS[state];
+                  return (
+                    <Card key={state} className="p-3 text-center space-y-2">
+                      <div className="flex justify-center">
+                        <StatusPill state={state} />
+                      </div>
+                      <div className="text-xs text-muted-foreground font-mono">
+                        {def.name}
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            </section>
 
-        {/* Monorepo Packages Grid */}
-        <section className="space-y-4">
-          <div>
-            <h3 className="text-xl font-bold tracking-tight">
-              Monorepo 核心包架构
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              严格分层的单一职责包结构
-            </p>
-          </div>
+            {/* Motion Tokens Section */}
+            <section className="space-y-4">
+              <div>
+                <h3 className="text-xl font-bold tracking-tight">
+                  Motion 运动规范 (Motion Tokens)
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  统一的物理运动节拍，支持无障碍减少动画（Reduced Motion）与倍速伸缩
+                </p>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PACKAGES.map((pkg) => (
-              <Card key={pkg.name} className="hover:border-primary/50 transition-colors">
-                <CardHeader className="p-4">
-                  <CardTitle className="text-sm font-mono text-primary font-medium">
-                    {pkg.name}
-                  </CardTitle>
-                  <CardDescription className="text-xs mt-1">
-                    {pkg.desc}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </section>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {Object.entries(MOTION_TOKENS).map(([key, token]) => (
+                  <Card key={key}>
+                    <CardHeader className="p-4 pb-2">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-base font-semibold">{key}</CardTitle>
+                        <Badge variant="secondary">{token.durationMs}ms</Badge>
+                      </div>
+                      <CardDescription className="text-xs">{token.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0 font-mono text-[11px] text-muted-foreground truncate">
+                      {token.easing}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
 
-        {/* Benchmark Algorithms Suite */}
-        <section className="space-y-4">
-          <div>
-            <h3 className="text-xl font-bold tracking-tight">
-              基准算法套件 (Benchmark Algorithm Suite)
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              覆盖序列、二分查找、图、堆、动态规划与回溯的完整 MVP 算法清单
-            </p>
-          </div>
+            {/* Monorepo Packages Grid */}
+            <section className="space-y-4">
+              <div>
+                <h3 className="text-xl font-bold tracking-tight">
+                  Monorepo 核心包架构
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  严格分层的单一职责包结构
+                </p>
+              </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {BENCHMARK_ALGORITHMS.map((algo) => (
-              <Card key={algo.id} className="flex flex-col justify-between">
-                <CardHeader className="p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <Badge variant="outline" className="text-xs">
-                      {algo.category}
-                    </Badge>
-                    <span className="text-[11px] text-muted-foreground font-mono">
-                      {algo.status}
-                    </span>
-                  </div>
-                  <CardTitle className="text-base font-bold mt-2">
-                    {algo.title}
-                  </CardTitle>
-                  <CardDescription className="text-xs font-mono text-muted-foreground mt-1">
-                    {algo.renderers}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {PACKAGES.map((pkg) => (
+                  <Card key={pkg.name} className="hover:border-primary/50 transition-colors">
+                    <CardHeader className="p-4">
+                      <CardTitle className="text-sm font-mono text-primary font-medium">
+                        {pkg.name}
+                      </CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        {pkg.desc}
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            {/* Benchmark Algorithms Suite */}
+            <section className="space-y-4">
+              <div>
+                <h3 className="text-xl font-bold tracking-tight">
+                  基准算法套件 (Benchmark Algorithm Suite)
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  覆盖序列、二分查找、图、堆、动态规划与回溯的完整 MVP 算法清单
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {BENCHMARK_ALGORITHMS.map((algo) => (
+                  <Card key={algo.id} className="flex flex-col justify-between">
+                    <CardHeader className="p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          {algo.category}
+                        </Badge>
+                        <span className="text-[11px] text-muted-foreground font-mono">
+                          {algo.status}
+                        </span>
+                      </div>
+                      <CardTitle className="text-base font-bold mt-2">
+                        {algo.title}
+                      </CardTitle>
+                      <CardDescription className="text-xs font-mono text-muted-foreground mt-1">
+                        {algo.renderers}
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
+            </section>
           </div>
-        </section>
+        )}
       </main>
 
       {/* Footer */}

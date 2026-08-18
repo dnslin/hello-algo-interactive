@@ -4,6 +4,7 @@ import {
   validateCodeAnchorMap,
   createContentManifest,
   LanguageCodeManifest,
+  bubbleSortContentManifest,
 } from './index.js';
 const sampleCode = `function bubbleSort(nums: number[]): void {
   const n = nums.length;
@@ -88,5 +89,33 @@ describe('Content Adapter - Content Manifest Factory', () => {
         },
       })
     ).toThrow('Invalid semantic code anchor spans');
+  });
+});
+
+describe('Content Adapter - Bubble Sort Manifest', () => {
+  it('provides valid TypeScript, Python, and Go code manifests', () => {
+    const ts = bubbleSortContentManifest.codeManifests.typescript;
+    const py = bubbleSortContentManifest.codeManifests.python;
+    const go = bubbleSortContentManifest.codeManifests.go;
+
+    expect(ts).toBeDefined();
+    expect(py).toBeDefined();
+    expect(go).toBeDefined();
+
+    if (ts) {
+      expect(getAnchorLineSpan(ts, 'COMPARE')).toBeDefined();
+      expect(getAnchorLineSpan(ts, 'SWAP')).toBeDefined();
+      expect(validateCodeAnchorMap(ts.anchors, ts.code)).toBe(true);
+    }
+
+    if (py) {
+      expect(getAnchorLineSpan(py, 'COMPARE')).toBeDefined();
+      expect(validateCodeAnchorMap(py.anchors, py.code)).toBe(true);
+    }
+
+    if (go) {
+      expect(getAnchorLineSpan(go, 'SWAP')).toBeDefined();
+      expect(validateCodeAnchorMap(go.anchors, go.code)).toBe(true);
+    }
   });
 });
