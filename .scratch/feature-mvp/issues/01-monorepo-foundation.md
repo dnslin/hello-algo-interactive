@@ -9,9 +9,9 @@
 
 **GitHub Issue:** #2
 
-**Status:** ready-for-agent
+**Status:** complete
 
-- [ ] 配置 `pnpm-workspace.yaml` 与根目录 `package.json`，创建 `apps/web` 与 `packages/*`（`algorithm-engine`, `renderers-sequence`, `renderers-graph-tree`, `renderers-grid-board`, `renderers-linked`, `ui`, `content-adapter`）的基础 `package.json` 和 `tsconfig.json`。
-- [ ] 在 `packages/ui` 中初始化基于 Tailwind CSS 的 OKLCH 语义色盘（idle, comparing, active, selected, visited, sorted, conflict）与基础 Motion Tokens。
-- [ ] 在 `apps/web` 中配置 React 18+ 与 Vite，能正常渲染带有基础主题样式的欢迎外壳。
-- [ ] 在根目录配置全局 `pnpm test` (Vitest) 与 `pnpm typecheck` (tsc --noEmit)，在 CI/命令行中全部通过。
+- [x] 配置 `pnpm-workspace.yaml` 与根目录 `package.json`，创建 `apps/web` 与 `packages/*`（`algorithm-engine`, `renderers-sequence`, `renderers-graph-tree`, `renderers-grid-board`, `renderers-linked`, `ui`, `content-adapter`）的基础 `package.json` 和 `tsconfig.json`。
+- [x] 在 `packages/ui` 中初始化基于 Tailwind CSS 的 OKLCH 语义色盘（idle, comparing, active, selected, visited, sorted, conflict）与基础 Motion Tokens。
+- [x] 在 `apps/web` 中配置 React 18+ 与 Vite，能正常渲染带有基础主题样式的欢迎外壳。
+- [x] 在根目录配置全局 `pnpm test` (Vitest) 与 `pnpm typecheck` (tsc --noEmit)，在 CI/命令行中全部通过。

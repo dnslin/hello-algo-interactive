@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: oklch(0.99 0.005 240);
+    --foreground: oklch(0.18 0.02 240);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.18 0.02 240);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.18 0.02 240);
+    --primary: oklch(0.35 0.12 260);
+    --primary-foreground: oklch(0.98 0 0);
+    --secondary: oklch(0.95 0.02 240);
+    --secondary-foreground: oklch(0.25 0.03 240);
+    --muted: oklch(0.96 0.01 240);
+    --muted-foreground: oklch(0.50 0.03 240);
+    --accent: oklch(0.93 0.03 240);
+    --accent-foreground: oklch(0.20 0.03 240);
+    --destructive: oklch(0.60 0.22 25);
+    --destructive-foreground: oklch(0.98 0 0);
+    --border: oklch(0.90 0.01 240);
+    --input: oklch(0.90 0.01 240);
+    --ring: oklch(0.45 0.15 260);
+    --radius: 0.5rem;
+
+    /* Visualization Algorithm State Tokens (Light Mode) */
+    --viz-idle: oklch(0.94 0.01 240);
+    --viz-idle-fg: oklch(0.25 0.02 240);
+    --viz-idle-border: oklch(0.85 0.02 240);
+
+    --viz-comparing: oklch(0.88 0.16 85);
+    --viz-comparing-fg: oklch(0.25 0.08 85);
+    --viz-comparing-border: oklch(0.75 0.18 85);
+
+    --viz-active: oklch(0.78 0.18 220);
+    --viz-active-fg: oklch(0.15 0.05 220);
+    --viz-active-border: oklch(0.65 0.20 220);
+
+    --viz-selected: oklch(0.68 0.22 280);
+    --viz-selected-fg: oklch(0.98 0.01 280);
+    --viz-selected-border: oklch(0.55 0.24 280);
+
+    --viz-visited: oklch(0.84 0.12 175);
+    --viz-visited-fg: oklch(0.20 0.05 175);
+    --viz-visited-border: oklch(0.70 0.14 175);
+
+    --viz-sorted: oklch(0.80 0.18 145);
+    --viz-sorted-fg: oklch(0.18 0.06 145);
+    --viz-sorted-border: oklch(0.68 0.20 145);
+
+    --viz-conflict: oklch(0.65 0.24 25);
+    --viz-conflict-fg: oklch(0.98 0.01 25);
+    --viz-conflict-border: oklch(0.52 0.26 25);
+  }
+
+  .dark {
+    --background: oklch(0.16 0.02 240);
+    --foreground: oklch(0.95 0.01 240);
+    --card: oklch(0.20 0.02 240);
+    --card-foreground: oklch(0.95 0.01 240);
+    --popover: oklch(0.20 0.02 240);
+    --popover-foreground: oklch(0.95 0.01 240);
+    --primary: oklch(0.75 0.14 260);
+    --primary-foreground: oklch(0.16 0.02 240);
+    --secondary: oklch(0.26 0.02 240);
+    --secondary-foreground: oklch(0.92 0.01 240);
+    --muted: oklch(0.24 0.02 240);
+    --muted-foreground: oklch(0.65 0.02 240);
+    --accent: oklch(0.28 0.03 240);
+    --accent-foreground: oklch(0.95 0.01 240);
+    --destructive: oklch(0.55 0.24 25);
+    --destructive-foreground: oklch(0.98 0 0);
+    --border: oklch(0.30 0.02 240);
+    --input: oklch(0.30 0.02 240);
+    --ring: oklch(0.65 0.15 260);
+
+    /* Visualization Algorithm State Tokens (Dark Mode) */
+    --viz-idle: oklch(0.28 0.02 240);
+    --viz-idle-fg: oklch(0.92 0.01 240);
+    --viz-idle-border: oklch(0.40 0.03 240);
+
+    --viz-comparing: oklch(0.72 0.18 85);
+    --viz-comparing-fg: oklch(0.12 0.05 85);
+    --viz-comparing-border: oklch(0.82 0.19 85);
+
+    --viz-active: oklch(0.68 0.20 220);
+    --viz-active-fg: oklch(0.10 0.04 220);
+    --viz-active-border: oklch(0.78 0.22 220);
+
+    --viz-selected: oklch(0.62 0.24 280);
+    --viz-selected-fg: oklch(0.98 0.01 280);
+    --viz-selected-border: oklch(0.72 0.26 280);
+
+    --viz-visited: oklch(0.65 0.14 175);
+    --viz-visited-fg: oklch(0.12 0.04 175);
+    --viz-visited-border: oklch(0.75 0.16 175);
+
+    --viz-sorted: oklch(0.70 0.20 145);
+    --viz-sorted-fg: oklch(0.12 0.05 145);
+    --viz-sorted-border: oklch(0.80 0.22 145);
+
+    --viz-conflict: oklch(0.60 0.26 25);
+    --viz-conflict-fg: oklch(0.98 0.01 25);
+    --viz-conflict-border: oklch(0.70 0.28 25);
+  }
+}
